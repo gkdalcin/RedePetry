@@ -34,9 +34,9 @@ class RedePetry:
                break
         del self.transicoes[ind]
     
-    def criarConexao(self, transicao_id, entrada, saida, peso):
+    def criarConexao(self, transicao_id, entrada, saida, peso, type="default"):
         transicao = self.getTransicao(transicao_id)
-        transicao.conexoes.append([entrada,saida,peso])
+        transicao.conexoes.append([entrada,saida,peso,type])
     
     def trocaMarcas(self):
         for item in self.transicoes:
@@ -45,16 +45,28 @@ class RedePetry:
                     entrada = self.getLugar(conexao[0])
                     saida = self.getLugar(conexao[1])
                     peso = conexao[2]
-                    entrada.marcas -= peso
-                    saida.marcas += peso
-
+                    if conexao[3] == 'default':
+                        entrada.marcas -= peso
+                        saida.marcas += peso
+                    elif conexao[3] == 'inibidor' and entrada.marcas > 0:
+                        entrada.marcas -= 1
+                        saida.marcas += 1
+                    elif conexao[3] == 'reset':
+                        saida.marcas += entrada.marcas
+                        entrada.marcas = 0
+                        
+    
+    def insereMarcas(self, id, marcas):
+        lugar = self.getLugar(id)
+        lugar.marcas += marcas
     
     def checaTransicoes(self):
         for item in self.transicoes:
             active = True
             for conexao in item.conexoes:
                 entrada = self.getLugar(conexao[0])
-                if entrada.marcas < conexao[2]: active = False
+                if conexao[3] in ['default','reset'] and entrada.marcas < conexao[2]: active = False
+                elif conexao[3] == 'inibidor' and (entrada.marcas == 0 or entrada.marcas >= conexao[2]): active = False
             item.ativa = active
 
     def imprimeRede(self):
