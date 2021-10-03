@@ -45,13 +45,13 @@ class RedePetry:
                     entrada = self.getLugar(conexao[0])
                     saida = self.getLugar(conexao[1])
                     peso = conexao[2]
-                    if conexao[3] == 'default':
+                    if conexao[3] == 'default' and entrada.marcas > 0:
                         entrada.marcas -= peso
                         saida.marcas += peso
                     elif conexao[3] == 'inibidor' and entrada.marcas > 0:
                         entrada.marcas -= 1
                         saida.marcas += 1
-                    elif conexao[3] == 'reset':
+                    elif conexao[3] == 'reset' and entrada.marcas > 0:
                         saida.marcas += entrada.marcas
                         entrada.marcas = 0
                         
@@ -59,6 +59,11 @@ class RedePetry:
     def insereMarcas(self, id, marcas):
         lugar = self.getLugar(id)
         lugar.marcas += marcas
+    
+    def removeMarcas(self, id, marcas):
+        lugar = self.getLugar(id)
+        lugar.marcas -= marcas
+        lugar.marcas = max([0,lugar.marcas])
     
     def checaTransicoes(self):
         for item in self.transicoes:

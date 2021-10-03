@@ -14,7 +14,7 @@ rp.criarConexao('T2','L4','L3',1, type='reset')
 
 #Loop de funcionamento da rede
 continuar = True
-aviso_input = "----------------------------------Digite: [1]Inserir Marcas [2]Sair: "
+aviso_input = "----------------------------------- Digite [1]Inserir Marcas [2]Remover Marcas [3]Sair "
 
 while continuar:
     rp.imprimeRede()
@@ -25,7 +25,11 @@ while continuar:
         lugar_id = input("Qual o ID do lugar? ")
         quant_marcas = int(input("Quantas marcas? "))
         rp.insereMarcas(lugar_id, quant_marcas)
-    elif escolha == "2": continuar = False
+    elif escolha == "2":
+        lugar_id = input("Qual o ID do lugar? ")
+        quant_marcas = int(input("Quantas marcas? "))
+        rp.removeMarcas(lugar_id, quant_marcas)
+    elif escolha == "3": continuar = False
     else:
         rp.trocaMarcas()
         rp.checaTransicoes()
